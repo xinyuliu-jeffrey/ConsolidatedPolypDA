@@ -9,8 +9,8 @@ import argparse
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='PyTorch Style Transfer with GFDA')
-    parser.add_argument('--src_path', default="/home/liuxinyu/content/datasets/polyps/CVC/CVC_png/", help='Source Dir')
-    parser.add_argument('--trg_path', default="/home/liuxinyu/content/datasets/polyps/ETIS/ETIS_png/", help='Target Dir')
+    parser.add_argument('--src_path', default="./CVC_png/", help='Source Dir')
+    parser.add_argument('--trg_path', default="./ETIS_png/", help='Target Dir')
     parser.add_argument('--save_path', default="./GFDA_images/", help='Save path')
     parser.add_argument('--anno_file', default="test.csv", help='The csv file for saving correspondance')
     args = parser.parse_args()
