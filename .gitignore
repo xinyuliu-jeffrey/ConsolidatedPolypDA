@@ -1,0 +1,4 @@
+*.csv
+*.pyc
+/__pycache__
+/GFDA_images
