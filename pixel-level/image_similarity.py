@@ -71,13 +71,13 @@ def normal_distribution(x, mean, sigma):
 def weighter(num_imgs):
     weighted = []
     for i in range(num_imgs):
-        y = normal_distribution(i/98, 0, 1) # i/65.333 is used for restrict to [-3, 3]
+        y = normal_distribution(i/(num_imgs/2), 0, 1) # i/(num_imgs/3) is used for restrict to [-3, 3]
         weighted.append(y)
     weighted = np.array(weighted)
     weighted = weighted/np.sum(weighted) # make the 'weighted' to sum=1
     return weighted
 
-def matched_trg_selector(pair_dict, rule):
+def matched_trg_selector(pair_dict, rule, trg_dict):
     '''
         Select the matched target image according to the rule.
         pair_dict: a dict with keys: target img names. values: cos similarity
@@ -96,12 +96,10 @@ def matched_trg_selector(pair_dict, rule):
         for i in sim_val_sorted:
             j = i.float()
             float_sim_val_sorted.append(j)
-        # print(sim_val_sorted)
-        weighted = weighter(196)
+        weighted = weighter(len(trg_dict))
         rand_val = np.random.choice(sim_val_sorted, 1, p=weighted)
         rand_val = torch.tensor(rand_val.astype(float)).cuda()
         index = sim_val_sorted.index(rand_val)
-        # print(index)
         matched_trg = trgs[index][0]
     return matched_trg
 
@@ -136,17 +134,17 @@ def get_pairs(source_path, trg_dict, model, anno_file, gauss_sample = False):
           pair_dict[trg_img] = cos(src_out, trg_dict[trg_img])
         if gauss_sample:
           rule = 'gauss'
-          matched_trg = matched_trg_selector(pair_dict, rule)
+          matched_trg = matched_trg_selector(pair_dict, rule, trg_dict)
         else:
           if num_of_img <= 153:
             rule = 'min'
-            matched_trg = matched_trg_selector(pair_dict, rule)
+            matched_trg = matched_trg_selector(pair_dict, rule, trg_dict)
           elif num_of_img > 759:
             rule = 'max'
-            matched_trg = matched_trg_selector(pair_dict, rule)
+            matched_trg = matched_trg_selector(pair_dict, rule, trg_dict)
           else:
             rule = 'rand'
-            matched_trg = matched_trg_selector(pair_dict, rule)
+            matched_trg = matched_trg_selector(pair_dict, rule, trg_dict)
       print(src_img + " is matched to: " + matched_trg, " rule: ", rule)
       csv_writer = csv.writer(f)
       csv_writer.writerow([src_img, matched_trg])
