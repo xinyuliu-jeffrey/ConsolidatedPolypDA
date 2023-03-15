@@ -94,7 +94,7 @@ class DALossComputation(object):
             da_att_features.cuda(), da_ica_labels_flattened.type(torch.cuda.FloatTensor)
         )
         
-        da_consist_loss = consistency_loss(da_img_cst_features, da_att_cst_features.cuda(), da_ica_labels_flattened.squeeze().type(torch.cuda.FloatTensor))
+        da_consist_loss = consistency_loss(da_img_cst_features, da_ica_cst_features.cuda(), da_ica_labels_flattened.squeeze().type(torch.cuda.FloatTensor))
 
         return da_img_losses, ica_loss, da_consist_loss
 
